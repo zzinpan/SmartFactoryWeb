@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../dist/SmartFactory.js"></script>
+
+    <style>
+        body { padding: 0px; margin: 0px; }
+        .viewer { position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; }
+    </style>
+</head>
+<body>
+    <div id="viewer" class="viewer"></div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const smartFactory = new SmartFactory( "#viewer" );
+    smartFactory.ready().then(() => {
+        alert( "로드!" );
+    });
+
+});
+</script>
+</body>
+</html>

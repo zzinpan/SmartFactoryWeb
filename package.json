@@ -1,0 +1,25 @@
+{
+  "name": "smartfactoryweb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup --config rollup.config.ts --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zzinpan/SmartFactoryWeb.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zzinpan/SmartFactoryWeb/issues"
+  },
+  "homepage": "https://github.com/zzinpan/SmartFactoryWeb#readme",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^8.3.3",
+    "rollup": "^2.75.7",
+    "tslib": "^2.4.0"
+  }
+}
