@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-us">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Title</title>
     <script src="../dist/SmartFactory.js"></script>
 
@@ -13,12 +14,12 @@
 <body>
     <div id="viewer" class="viewer"></div>
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+
+    await SmartFactory.ready("./Build");
 
     const smartFactory = new SmartFactory( "#viewer" );
-    smartFactory.ready().then(() => {
-        alert( "로드!" );
-    });
+    await smartFactory.ready();
 
 });
 </script>

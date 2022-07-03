@@ -1,14 +1,6 @@
-import Util from "./Util";
-
-const buildUrl = "https://zzinpan.github.io/SmartFactoryLibrary/SmartFactoryLibrary/Build";
-
-const unityLoaderNode = document.createElement("script");
-unityLoaderNode.src = `${buildUrl}/SmartFactoryLibrary.loader.js`;
-
-const headNode = document.querySelector('head');
-headNode.appendChild( unityLoaderNode );
-
 export default class SmartFactory {
+
+    static LibraryRootUrl: string = "./Build";
 
     element: {
         [key: string]: HTMLElement
@@ -31,6 +23,7 @@ export default class SmartFactory {
         }
 
         this.element.canvas = document.createElement("canvas");
+        this.element.canvas.id = this.unityEventKey;
         this.element.container.appendChild( this.element.canvas );
 
         const onWindowResize = () => {
@@ -46,6 +39,32 @@ export default class SmartFactory {
         };
         window.addEventListener("resize", onWindowResize);
         onWindowResize();
+
+    }
+
+    static async ready( libraryRootUrl: string = SmartFactory.LibraryRootUrl ): Promise<void> {
+
+        return new Promise(( resolve, reject) => {
+
+            if( libraryRootUrl !== SmartFactory.LibraryRootUrl ){
+                SmartFactory.LibraryRootUrl = libraryRootUrl;
+            }
+
+            const libraryUrl = `${SmartFactory.LibraryRootUrl}/SmartFactoryLibrary.loader.js`;
+            if( document.querySelector(`script[src='${libraryUrl}']`) != null ){
+                reject( new Error("이미 SmartFactoryLibrary 스크립트가 로드되었습니다.") );
+            }
+
+            const libraryScriptNode = document.createElement("script");
+            libraryScriptNode.addEventListener("load", () => {
+                resolve();
+            });
+            libraryScriptNode.src = libraryUrl;
+
+            const headNode = document.querySelector('head');
+            headNode.appendChild( libraryScriptNode );
+
+        });
 
     }
 
@@ -65,9 +84,9 @@ export default class SmartFactory {
 
             cancelAnimationFrame( rafId );
             createUnityInstance(this.element.canvas, {
-                dataUrl: `${buildUrl}/SmartFactoryLibrary.data.gz`,
-                frameworkUrl: `${buildUrl}/SmartFactoryLibrary.framework.js.gz`,
-                codeUrl: buildUrl + "/SmartFactoryLibrary.wasm.gz",
+                dataUrl: `${SmartFactory.LibraryRootUrl}/SmartFactoryLibrary.data`,
+                frameworkUrl: `${SmartFactory.LibraryRootUrl}/SmartFactoryLibrary.framework.js`,
+                codeUrl: SmartFactory.LibraryRootUrl + "/SmartFactoryLibrary.wasm",
                 streamingAssetsUrl: "StreamingAssets",
                 companyName: "DefaultCompany",
                 productName: "SmartFactoryLibrary",
@@ -87,7 +106,7 @@ export default class SmartFactory {
                         resolve(null);
                     }
                     window.addEventListener( "completeSetEventKey", onCompleteSetEventKey, false );
-                    this.unityInstance.sendMessage( "SmartFactory", "setEventKey", this.unityEventKey );
+                    this.unityInstance.SendMessage( "SmartFactory", "setEventKey", this.unityEventKey );
 
                 });
 

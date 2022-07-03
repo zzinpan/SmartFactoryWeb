@@ -57,11 +57,6 @@
         }
     }
 
-    var buildUrl = "https://zzinpan.github.io/SmartFactoryLibrary/SmartFactoryLibrary/Build";
-    var unityLoaderNode = document.createElement("script");
-    unityLoaderNode.src = "".concat(buildUrl, "/SmartFactoryLibrary.loader.js");
-    var headNode = document.querySelector('head');
-    headNode.appendChild(unityLoaderNode);
     var SmartFactory = /** @class */ (function () {
         function SmartFactory(containerElementQuery) {
             var _this = this;
@@ -77,6 +72,7 @@
                 this.element.container = containerElementQuery;
             }
             this.element.canvas = document.createElement("canvas");
+            this.element.canvas.id = this.unityEventKey;
             this.element.container.appendChild(this.element.canvas);
             var onWindowResize = function () {
                 var boundingRect = _this.element.container.getBoundingClientRect();
@@ -89,6 +85,29 @@
             window.addEventListener("resize", onWindowResize);
             onWindowResize();
         }
+        SmartFactory.ready = function (libraryRootUrl) {
+            if (libraryRootUrl === void 0) { libraryRootUrl = SmartFactory.LibraryRootUrl; }
+            return __awaiter(this, void 0, void 0, function () {
+                return __generator(this, function (_a) {
+                    return [2 /*return*/, new Promise(function (resolve, reject) {
+                            if (libraryRootUrl !== SmartFactory.LibraryRootUrl) {
+                                SmartFactory.LibraryRootUrl = libraryRootUrl;
+                            }
+                            var libraryUrl = "".concat(SmartFactory.LibraryRootUrl, "/SmartFactoryLibrary.loader.js");
+                            if (document.querySelector("script[src='".concat(libraryUrl, "']")) != null) {
+                                reject(new Error("이미 SmartFactoryLibrary 스크립트가 로드되었습니다."));
+                            }
+                            var libraryScriptNode = document.createElement("script");
+                            libraryScriptNode.addEventListener("load", function () {
+                                resolve();
+                            });
+                            libraryScriptNode.src = libraryUrl;
+                            var headNode = document.querySelector('head');
+                            headNode.appendChild(libraryScriptNode);
+                        })];
+                });
+            });
+        };
         SmartFactory.prototype.ready = function () {
             return __awaiter(this, void 0, void 0, function () {
                 var rafId, waitForUnityReady;
@@ -102,9 +121,9 @@
                         }
                         cancelAnimationFrame(rafId);
                         createUnityInstance(_this.element.canvas, {
-                            dataUrl: "".concat(buildUrl, "/SmartFactoryLibrary.data.gz"),
-                            frameworkUrl: "".concat(buildUrl, "/SmartFactoryLibrary.framework.js.gz"),
-                            codeUrl: buildUrl + "/SmartFactoryLibrary.wasm.gz",
+                            dataUrl: "".concat(SmartFactory.LibraryRootUrl, "/SmartFactoryLibrary.data"),
+                            frameworkUrl: "".concat(SmartFactory.LibraryRootUrl, "/SmartFactoryLibrary.framework.js"),
+                            codeUrl: SmartFactory.LibraryRootUrl + "/SmartFactoryLibrary.wasm",
                             streamingAssetsUrl: "StreamingAssets",
                             companyName: "DefaultCompany",
                             productName: "SmartFactoryLibrary",
@@ -120,7 +139,7 @@
                                     resolve(null);
                                 }
                                 window.addEventListener("completeSetEventKey", onCompleteSetEventKey, false);
-                                _this.unityInstance.sendMessage("SmartFactory", "setEventKey", _this.unityEventKey);
+                                _this.unityInstance.SendMessage("SmartFactory", "setEventKey", _this.unityEventKey);
                             });
                         })["catch"](function (message) {
                             alert(message);
@@ -131,6 +150,7 @@
                 });
             });
         };
+        SmartFactory.LibraryRootUrl = "./Build";
         return SmartFactory;
     }());
 
